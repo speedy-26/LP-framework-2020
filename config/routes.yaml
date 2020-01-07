@@ -1,5 +1,0 @@
-app_disque_ref:
-  path: /disque/info/{ref}
-  controller: App\Controller\DisqueController::info
-  requirements:
-    ref: '[A-Z]\d{4}'
