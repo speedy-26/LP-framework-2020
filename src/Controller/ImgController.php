@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -37,5 +38,26 @@ class ImgController extends AbstractController
         if ( ! file_exists($filename) )
             return $this->render('img/no_image.html.twig', ['nom'=>"$nom.jpg"]);
         return $this->file($filename);
+    }
+
+    /**
+     * Génération du code HTML pour le menu (embedding dans la ligne graphique)
+     * @Route("/img/menu", name="menu_img")
+     *
+     * @return Response
+     */
+    public function menu()
+    {
+        $listeImages = scandir(self::PATH_IMG);
+        foreach ( $listeImages as $key => $pathName ) {
+            if ( is_dir( $pathName ) )
+                unset( $listeImages[$key]); // on retire les . et .. de la liste
+            else
+                $listeImages[$key] = substr($pathName, 0, -4 ); // on retire l'extension .jpg
+        }
+        return $this->render('img/menu.html.twig', [
+                'url' => '/img/data/',
+                'items'=> $listeImages
+            ]);
     }
 }
